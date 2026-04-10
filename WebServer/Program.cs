@@ -4,6 +4,23 @@ var builder = WebApplication.CreateBuilder(args);
 /// 2. Сборка приложения
 var app = builder.Build();
 
+// Middleware 1: Логирование запросов
+app.Use(async (context, next) => {
+    Console.WriteLine($"[LOG] {context.Request.Method} {context.Request.Path}");
+    await next(context);
+    Console.WriteLine($"[LOG] Ответ отправлен: {context.Response.StatusCode}");
+});
+// Middleware 2: Добавлен заголовок в ответ
+app.Use(async (context, next) => {
+    context.Response.Headers.Append("X-Powered-By", "ASP.NET Core Lab27");
+    await next(context);
+});
+// Middleware 3:
+/*
+app.Use(async (context, next) => {
+
+});
+*/
 /// 3. Регистрация маршрута
 //app.MapGet("/", () => "Привет от ИСП-233! Автор: <Ринат>");
 
@@ -36,6 +53,29 @@ app.MapGet("/product/{id}", (int id) => new Product(
     Price: id * 99.99m,
     InStock: id % 2 == 0
 ));
+
+// step 9
+// midle
+/*
+app.Use(async (context, next) => {
+    var method = context.Request.Method;
+    var path = context.Request.Path;
+    Console.WriteLine($"-> {method} {path}");
+    await next(context);
+});
+// маршруты
+app.MapGet('/', () => Results.Ok(new {
+    Message = "Добро пожаловать!",
+    Version = "1.0",
+    Time = DateTime.Now.ToString("HH:mm:ss")
+}));
+app.MapGet("/me", () => Results.Ok(new {
+    Name = "Abdulin Rinat",
+    Group = "ISP-233",
+    Course = 3,
+    Skills = new[] { "С#", "HTML", "CSS", "JS", "ASP.NET" -}
+}));
+*/
 /// 4. Запуск
 app.Run();
 
