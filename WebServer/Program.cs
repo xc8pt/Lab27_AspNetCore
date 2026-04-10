@@ -15,6 +15,28 @@ app.MapGet("/about", () => "Это мой первый ASP.NET Core сервер
 app.MapGet("/time", () => $"Время на сервере: {DateTime.Now}");
 // Маршрут 4: Параметр пути
 app.MapGet("/hello/{name}", (string name) => $"Привет, {name}!");
-
+// Маршрут 5: Возвращаем JSON - обЪект
+app.MapGet("/student", () => new {
+    Name = "Rinat Abdulin",
+    Group = "ISP-233",
+    Year = 3,
+    IsActive = true
+});
+// Маршрут 6: JSON - массив
+app.MapGet("/subjects", () => new[] {
+    "RPM",
+    "RMP",
+    "ISRPO",
+    "SP",
+});
+// Маршрут 7: JSON с использованием класса
+app.MapGet("/product/{id}", (int id) => new Product(
+    Id: id,
+    Name: $"Товар #{id}",
+    Price: id * 99.99m,
+    InStock: id % 2 == 0
+));
 /// 4. Запуск
 app.Run();
+
+record Product(int Id, string Name, decimal Price, bool InStock);
