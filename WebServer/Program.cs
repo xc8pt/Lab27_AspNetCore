@@ -3,7 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 /// 2. Сборка приложения
 var app = builder.Build();
-/*
+
 // Middleware 1: Логирование запросов
 app.Use(async (context, next) => {
     Console.WriteLine($"[LOG] {context.Request.Method} {context.Request.Path}");
@@ -15,12 +15,22 @@ app.Use(async (context, next) => {
     context.Response.Headers.Append("X-Powered-By", "ASP.NET Core Lab27");
     await next(context);
 });
-// Middleware 3:
-/*
+// Middleware для проверки ключа доступа
 app.Use(async (context, next) => {
-
+    var key = context.Request.Query["key"];
+    
+    if (key != "secret")
+    {
+        // Если ключ отсутствует или неверный - возвращаем 401
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsync("Unauthorized: Invalid or missing key parameter");
+        return; // Прерываем цепочку middleware
+    }
+    
+    // Если ключ верный - пропускаем запрос дальше
+    await next(context);
 });
-*/
+
 /// 3. Регистрация маршрута
 //app.MapGet("/", () => "Привет от ИСП-233! Автор: <Ринат>");
 /*
